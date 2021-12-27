@@ -15,7 +15,7 @@ public class CameraMainArea : CameraFit
         }
     }
 
-    [Tooltip("Size of camera view (similar to camera orthographic size, but two dimensional")]
+    [Tooltip("Size of camera view (similar to camera orthographic size, but two dimensional)")]
     [SerializeField]
     private Vector2 _mainAreaSize = new Vector2(4,4);
     public Vector2 Size
@@ -70,16 +70,13 @@ public class CameraMainArea : CameraFit
             return;
 
         float cameraSize = _mainAreaSize.y / _zoom;
+        if (_mainAreaSize.y * camera.aspect < _mainAreaSize.x)
+            cameraSize = _mainAreaSize.x / (camera.aspect * _zoom);
         float camWidth = cameraSize * camera.aspect;
         Vector3 newCamPos = camera.transform.localPosition;
+
+        newCamPos.y = _mainAreaPosition.y - (_mainAreaSize.y - cameraSize) * _verticalShift * 0.5f;
         newCamPos.x = _mainAreaPosition.x + (_mainAreaSize.x - camWidth) * _horizontalShift * 0.5f;
-        newCamPos.y = _mainAreaPosition.y;
-        if (camWidth < _mainAreaSize.x)
-        {
-            cameraSize = _mainAreaSize.x / (camera.aspect * _zoom);
-            newCamPos.y = _mainAreaPosition.y - (_mainAreaSize.y - cameraSize) * _verticalShift * 0.5f;
-            newCamPos.x = _mainAreaPosition.x;
-        }
 
         ApplyChanges(newCamPos, cameraSize);
     }
