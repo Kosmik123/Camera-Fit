@@ -69,9 +69,9 @@ public class CameraMainArea : CameraFit
         if (camera == null || !camera.orthographic)
             return;
 
-        float cameraSize = _mainAreaSize.y / _zoom;
-        if (_mainAreaSize.y * camera.aspect < _mainAreaSize.x)
-            cameraSize = _mainAreaSize.x / (camera.aspect * _zoom);
+        float cameraSize = Mathf.Max(_mainAreaSize.y, _mainAreaSize.x / camera.aspect);
+        cameraSize /= _zoom;
+
         float camWidth = cameraSize * camera.aspect;
         Vector3 newCamPos = camera.transform.localPosition;
 
