@@ -2,9 +2,8 @@
 
 public class CameraMainArea : CameraFit
 {
-    public new Camera camera;
-
-    [SerializeField]
+    [Tooltip("World position of camera view")]
+    [SerializeField]  
     private Vector2 _mainAreaPosition;
     public Vector2 Position
     {
@@ -16,6 +15,7 @@ public class CameraMainArea : CameraFit
         }
     }
 
+    [Tooltip("Size of camera view (similar to camera orthographic size, but two dimensional")]
     [SerializeField]
     private Vector2 _mainAreaSize = new Vector2(4,4);
     public Vector2 Size
@@ -28,9 +28,14 @@ public class CameraMainArea : CameraFit
         }
     }
 
-
+    [Tooltip("Camera view position relative to screen.\n-1 is left. 0 is center. +1 is right.")]
     [SerializeField] [Range(-1, 1)]
-    private float _horizontalShift, _verticalShift;
+    private float _horizontalShift;
+
+    [Tooltip("Camera view position relative to screen.\n -1 is top. 0 is center. +1 is bottom.")] 
+    [SerializeField] [Range(-1, 1)]
+    private float _verticalShift;
+    
     public Vector2 Shift
     {
         get { return new Vector2(_horizontalShift, _verticalShift); }
@@ -42,6 +47,7 @@ public class CameraMainArea : CameraFit
         }
     }
 
+    [Tooltip("Zoom of camera view")]
     [SerializeField]
     private float _zoom = 1;
     public float Zoom { 

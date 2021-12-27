@@ -6,9 +6,12 @@ using UnityEngine;
 
 public abstract class CameraFit : MonoBehaviour
 {
+    [Tooltip("Enable/disable camera changes")]
     public bool active = true;
     private float lastAspect;
-    protected Camera cam;
+    
+    [Tooltip("Camera to resize")]
+    public new Camera camera;
 
     public event EventHandler OnCameraResize;
 
@@ -16,9 +19,9 @@ public abstract class CameraFit : MonoBehaviour
 
     protected void Refresh()
     {
-        if (cam == null)
-            cam = GetComponent<Camera>();
-        if (Mathf.Abs(cam.aspect - lastAspect) > 0.01f)
+        if (camera == null)
+            return;
+        if (Mathf.Abs(camera.aspect - lastAspect) > 0.01f)
         {
             Resize();
             OnCameraResize?.Invoke(this, EventArgs.Empty);
@@ -29,8 +32,14 @@ public abstract class CameraFit : MonoBehaviour
 
 public class CameraOrthographicSize : CameraFit
 {
+    [Tooltip("Dimensions which are affected by size changes.\n" +
+        "0 - vertical (same as orthographic size change in Camera)\n" +
+        "1 - horizontal (size affects horizontal dimension of camera orthographic size)\n" +
+        "Anything between (size affect partially both dimensions)")]
     [Range(0, 1)]
     public float horizontalFit;
+
+    [Tooltip("Size of orthographic camera (similar to Camera orthographic size")] 
     public float size;
 
     private void Awake()
@@ -41,12 +50,12 @@ public class CameraOrthographicSize : CameraFit
 
     protected override void Resize()
     {
-        if (cam == null)
-            cam = GetComponent<Camera>();
-        if (!cam.orthographic)
+        if (camera == null)
+            camera = GetComponent<Camera>();
+        if (!camera.orthographic)
             return;
 
-        cam.orthographicSize = size * ((1 - horizontalFit) + horizontalFit / cam.aspect);
+        camera.orthographicSize = size * ((1 - horizontalFit) + horizontalFit / camera.aspect);
     }
 
 #if UNITY_EDITOR
