@@ -6,6 +6,8 @@ using UnityEngine;
 
 public abstract class CameraFit : MonoBehaviour
 {
+    public event Action OnCameraResized;
+
     [Tooltip("Enable/disable camera changes")]
     public bool active = true;
     private float lastAspect;
@@ -13,7 +15,6 @@ public abstract class CameraFit : MonoBehaviour
     [Tooltip("Camera to resize")]
     public new Camera camera;
 
-    public event EventHandler OnCameraResize;
     protected virtual void Awake()
     {
         Refresh();
@@ -28,7 +29,7 @@ public abstract class CameraFit : MonoBehaviour
         if (Mathf.Abs(camera.aspect - lastAspect) > 0.01f)
         {
             Resize();
-            OnCameraResize?.Invoke(this, EventArgs.Empty);
+            OnCameraResized?.Invoke();
         }
     }
 
