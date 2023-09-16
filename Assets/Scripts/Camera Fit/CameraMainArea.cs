@@ -10,8 +10,8 @@ public class CameraMainArea : CameraFit
         get => mainAreaPosition;
         set
         {
-            Resize();
             mainAreaPosition = value;
+            Refresh();
         }
     }
 
@@ -23,8 +23,8 @@ public class CameraMainArea : CameraFit
         get => mainAreaSize;
         set
         {
-            Resize();
             mainAreaSize = value;
+            Refresh();
         }
     }
 
@@ -41,15 +41,14 @@ public class CameraMainArea : CameraFit
         get => new Vector2(horizontalShift, verticalShift);
         set
         {
-            Resize();
             horizontalShift = Mathf.Clamp(value.x, -1, 1);
             verticalShift = Mathf.Clamp(value.y, -1, 1);
+            Refresh();
         }
     }
 
     [Tooltip("Zoom of camera view")]
     [SerializeField]
-            Resize();     
     private float zoom = 1;
     public float Zoom
     {
@@ -57,6 +56,7 @@ public class CameraMainArea : CameraFit
         set
         {
             zoom = value;
+            Refresh();
         }
     }
 
