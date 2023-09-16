@@ -13,7 +13,17 @@ public abstract class CameraFit : MonoBehaviour
     private float lastAspect;
     
     [Tooltip("Camera to resize")]
-    public new Camera camera;
+    [SerializeField]
+    protected new Camera camera;
+    public Camera Camera
+    {
+        get => camera;
+        set
+        {
+            camera = value;
+            Refresh();
+        }
+    }
 
     protected virtual void Awake()
     {
