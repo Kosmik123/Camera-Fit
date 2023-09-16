@@ -4,64 +4,60 @@ public class CameraMainArea : CameraFit
 {
     [Tooltip("World position of camera view")]
     [SerializeField]  
-    private Vector2 _mainAreaPosition;
+    private Vector2 mainAreaPosition;
     public Vector2 Position
     {
-        get { return _mainAreaPosition; }
+        get => mainAreaPosition;
         set
         {
-            _mainAreaPosition = value;
             Resize();
+            mainAreaPosition = value;
         }
     }
 
     [Tooltip("Size of camera view (similar to camera orthographic size, but two dimensional)")]
     [SerializeField]
-    private Vector2 _mainAreaSize = new Vector2(4,4);
+    private Vector2 mainAreaSize = new Vector2(4,4);
     public Vector2 Size
     {
-        get { return _mainAreaSize; }
+        get => mainAreaSize;
         set
         {
-            _mainAreaSize = value;
             Resize();
+            mainAreaSize = value;
         }
     }
 
     [Tooltip("Camera view position relative to screen.\n-1 is left. 0 is center. +1 is right.")]
     [SerializeField] [Range(-1, 1)]
-    private float _horizontalShift;
+    private float horizontalShift;
 
-    [Tooltip("Camera view position relative to screen.\n -1 is top. 0 is center. +1 is bottom.")] 
+    [Tooltip("Camera view position relative to screen.\n-1 is top. 0 is center. +1 is bottom.")] 
     [SerializeField] [Range(-1, 1)]
-    private float _verticalShift;
+    private float verticalShift;
     
     public Vector2 Shift
     {
-        get { return new Vector2(_horizontalShift, _verticalShift); }
+        get => new Vector2(horizontalShift, verticalShift);
         set
         {
-            _horizontalShift = Mathf.Clamp(value.x, -1, 1);
-            _verticalShift = Mathf.Clamp(value.y, -1, 1);
             Resize();
+            horizontalShift = Mathf.Clamp(value.x, -1, 1);
+            verticalShift = Mathf.Clamp(value.y, -1, 1);
         }
     }
 
     [Tooltip("Zoom of camera view")]
     [SerializeField]
-    private float _zoom = 1;
-    public float Zoom { 
-        get { return _zoom; } 
-        set 
-        {
-            _zoom = value;
             Resize();     
-        } 
-    }
-
-    private void Awake()
+    private float zoom = 1;
+    public float Zoom
     {
-        Resize();
+        get => zoom;
+        set
+        {
+            zoom = value;
+        }
     }
 
     protected override void Resize()
@@ -69,14 +65,14 @@ public class CameraMainArea : CameraFit
         if (camera == null || !camera.orthographic)
             return;
 
-        float cameraSize = Mathf.Max(_mainAreaSize.y, _mainAreaSize.x / camera.aspect);
-        cameraSize /= _zoom;
+        float cameraSize = Mathf.Max(mainAreaSize.y, mainAreaSize.x / camera.aspect);
+        cameraSize /= zoom;
 
         float camWidth = cameraSize * camera.aspect;
         Vector3 newCamPos = camera.transform.localPosition;
 
-        newCamPos.y = _mainAreaPosition.y - (_mainAreaSize.y - cameraSize) * _verticalShift * 0.5f;
-        newCamPos.x = _mainAreaPosition.x + (_mainAreaSize.x - camWidth) * _horizontalShift * 0.5f;
+        newCamPos.y = mainAreaPosition.y - (mainAreaSize.y - cameraSize) * verticalShift * 0.5f;
+        newCamPos.x = mainAreaPosition.x + (mainAreaSize.x - camWidth) * horizontalShift * 0.5f;
 
         ApplyChanges(newCamPos, cameraSize);
     }
@@ -90,24 +86,24 @@ public class CameraMainArea : CameraFit
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (_mainAreaSize.x <= 0)
-            _mainAreaSize.x = 0.00001f;
-        if (_mainAreaSize.y <= 0)
-            _mainAreaSize.y = 0.00001f;
-        if (_zoom == 0)
-            _zoom = 0.0001f;
 
         if (active)
             Resize();
+        if (mainAreaSize.x <= 0)
+            mainAreaSize.x = 0.00001f;
+        if (mainAreaSize.y <= 0)
+            mainAreaSize.y = 0.00001f;
+        if (zoom == 0)
+            zoom = 0.0001f;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(_mainAreaPosition, _mainAreaSize);
 
         if (active)
             Resize();
+        Gizmos.DrawWireCube(mainAreaPosition, mainAreaSize);
     }
 
 #endif
