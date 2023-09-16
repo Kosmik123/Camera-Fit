@@ -84,27 +84,22 @@ public class CameraMainArea : CameraFit
     }
 
 #if UNITY_EDITOR
-    private void OnValidate()
+    protected override void OnValidate()
     {
-
-        if (active)
-            Resize();
         if (mainAreaSize.x <= 0)
             mainAreaSize.x = 0.00001f;
         if (mainAreaSize.y <= 0)
             mainAreaSize.y = 0.00001f;
         if (zoom == 0)
             zoom = 0.0001f;
+        base.OnValidate();
     }
 
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-
-        if (active)
-            Resize();
         Gizmos.DrawWireCube(mainAreaPosition, mainAreaSize);
+        base.OnDrawGizmos();
     }
-
 #endif
 }

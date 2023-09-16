@@ -14,6 +14,10 @@ public abstract class CameraFit : MonoBehaviour
     public new Camera camera;
 
     public event EventHandler OnCameraResize;
+    protected virtual void Awake()
+    {
+        Refresh();
+    }
 
     protected abstract void Resize();
 
@@ -27,8 +31,21 @@ public abstract class CameraFit : MonoBehaviour
             OnCameraResize?.Invoke(this, EventArgs.Empty);
         }
     }
-}
 
+#if UNITY_EDITOR
+    protected virtual void OnDrawGizmos()
+    {
+        if (active)
+            Resize();
+    }
+
+    protected virtual void OnValidate()
+    {
+        if (active)
+            Resize();
+    }
+#endif
+}
 
 public class CameraOrthographicSize : CameraFit
 {
@@ -42,12 +59,6 @@ public class CameraOrthographicSize : CameraFit
     [Tooltip("Size of orthographic camera (similar to Camera orthographic size")] 
     public float size;
 
-    private void Awake()
-    {
-        Resize();
-    }
-
-
     protected override void Resize()
     {
         if (camera == null)
@@ -57,18 +68,4 @@ public class CameraOrthographicSize : CameraFit
 
         camera.orthographicSize = size * ((1 - horizontalFit) + horizontalFit / camera.aspect);
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (active)
-            Resize();
-    }
-
-    private void OnValidate()
-    {
-        if (active)
-            Resize();
-    }
-#endif
 }
