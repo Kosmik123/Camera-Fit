@@ -62,14 +62,14 @@ public class CameraMainArea : CameraFit
 
     protected override void Resize()
     {
-        if (camera == null || !camera.orthographic)
+        if (_camera == null || !_camera.orthographic)
             return;
 
-        float cameraSize = Mathf.Max(mainAreaSize.y, mainAreaSize.x / camera.aspect);
+        float cameraSize = Mathf.Max(mainAreaSize.y, mainAreaSize.x / _camera.aspect);
         cameraSize /= zoom;
 
-        float camWidth = cameraSize * camera.aspect;
-        Vector3 newCamPos = camera.transform.localPosition;
+        float camWidth = cameraSize * _camera.aspect;
+        Vector3 newCamPos = _camera.transform.localPosition;
 
         newCamPos.y = mainAreaPosition.y - (mainAreaSize.y - cameraSize) * verticalShift * 0.5f;
         newCamPos.x = mainAreaPosition.x + (mainAreaSize.x - camWidth) * horizontalShift * 0.5f;
@@ -79,8 +79,8 @@ public class CameraMainArea : CameraFit
 
     private void ApplyChanges(Vector3 position, float size)
     {
-        camera.orthographicSize = 0.5f * size;
-        camera.transform.localPosition = position;
+        _camera.orthographicSize = 0.5f * size;
+        _camera.transform.localPosition = position;
     }
 
 #if UNITY_EDITOR

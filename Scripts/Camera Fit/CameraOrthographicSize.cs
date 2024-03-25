@@ -11,15 +11,20 @@ public abstract class CameraFit : MonoBehaviour
     
     [Tooltip("Camera to resize")]
     [SerializeField]
-    protected new Camera camera;
+    protected Camera _camera;
     public Camera Camera
     {
-        get => camera;
+        get => _camera;
         set
         {
-            camera = value;
+            _camera = value;
             Refresh();
         }
+    }
+
+    protected virtual void Reset()
+    {
+        _camera = GetComponentInChildren<Camera>();
     }
 
     protected virtual void Awake()
@@ -31,9 +36,9 @@ public abstract class CameraFit : MonoBehaviour
 
     protected void Refresh()
     {
-        if (camera == null)
+        if (_camera == null)
             return;
-        if (Mathf.Abs(camera.aspect - lastAspect) > 0.01f)
+        if (Mathf.Abs(_camera.aspect - lastAspect) > 0.01f)
         {
             Resize();
             OnCameraResized?.Invoke();
@@ -69,11 +74,11 @@ public class CameraOrthographicSize : CameraFit
 
     protected override void Resize()
     {
-        if (camera == null)
-            camera = GetComponent<Camera>();
-        if (!camera.orthographic)
+        if (_camera == null)
+            _camera = GetComponent<Camera>();
+        if (!_camera.orthographic)
             return;
 
-        camera.orthographicSize = size * ((1 - horizontalFit) + horizontalFit / camera.aspect);
+        _camera.orthographicSize = size * ((1 - horizontalFit) + horizontalFit / _camera.aspect);
     }
 }
